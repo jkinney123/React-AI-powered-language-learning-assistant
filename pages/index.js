@@ -1,16 +1,14 @@
 import Head from "next/head";
 import { useState } from "react";
 import styles from "./index.module.css";
+import TranslationChallenge from "./TranslationChallenge";
+import AssistantForm from "./AssistantForm";
+
 
 export default function Home() {
-  const [name, setName] = useState("");
-  const [targetLanguage, setTargetLanguage] = useState("");
-  const [userInput, setUserInput] = useState("");
   const [response, setResponse] = useState("");
 
-  async function onSubmit(event) {
-    event.preventDefault();
-
+  async function onFormSubmit(name, targetLanguage, userInput) {
     try {
       const apiResponse = await fetch("/api/generate", {
         method: "POST",
@@ -21,6 +19,8 @@ export default function Home() {
       });
 
       const data = await apiResponse.json();
+      console.log("API response data:", data);
+
       if (apiResponse.status !== 200) {
         throw data.error || new Error(`Request failed with status ${apiResponse.status}`);
       }
@@ -32,6 +32,8 @@ export default function Home() {
     }
   }
 
+
+
   return (
     <div>
       <Head>
@@ -41,37 +43,14 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1>Welcome to the Personalized Language Learning Assistant!</h1>
-        <form onSubmit={onSubmit}>
-          <label>
-            What's your name?
-            <input
-              type="text"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
-          </label>
-          <br />
-          <label>
-            Which language would you like to learn?
-            <input
-              type="text"
-              value={targetLanguage}
-              onChange={(event) => setTargetLanguage(event.target.value)}
-            />
-          </label>
-          <br />
-          <label>
-            Ask a question or request a translation:
-            <input
-              type="text"
-              value={userInput}
-              onChange={(event) => setUserInput(event.target.value)}
-            />
-          </label>
-          <br />
-          <input type="submit" value="Submit" />
-        </form>
+        <AssistantForm onFormSubmit={onFormSubmit} />
         {response && <p>Assistant: {response}</p>}
+        <TranslationChallenge
+          apiKey={process.env.OPENAI_API_KEY}
+          sourceText="The cat is on the table."
+          sourceLanguage="English"
+          targetLanguage="Spanish"
+        />
       </main>
     </div>
   );
