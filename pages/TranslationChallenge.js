@@ -1,10 +1,31 @@
 import React, { useState, useEffect } from 'react';
 const stringSimilarity = require('string-similarity');
 
-const TranslationChallenge = ({ apiKey, sourceText, sourceLanguage, targetLanguage }) => {
+const TranslationChallenge = ({ apiKey, sourceLanguage, targetLanguage }) => {
+    const [sourceText, setSourceText] = useState('');
     const [userInput, setUserInput] = useState('');
     const [correctAnswer, setCorrectAnswer] = useState(null);
     const [score, setScore] = useState(0);
+    const [showAnswer, setShowAnswer] = useState(false);
+
+    useEffect(() => {
+        async function fetchRandomSentence() {
+            const apiUrl = '/api/generate';
+            const res = await fetch(apiUrl, {
+                method: 'POST',
+                body: JSON.stringify({
+                    generate_sentence: true
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const json = await res.json();
+            setSourceText(json.generated_sentence);
+        }
+
+        fetchRandomSentence();
+    }, []);
 
     useEffect(() => {
         async function fetchCorrectAnswer() {
@@ -13,7 +34,7 @@ const TranslationChallenge = ({ apiKey, sourceText, sourceLanguage, targetLangua
                 method: 'POST',
                 body: JSON.stringify({
                     target_language: targetLanguage,
-                    user_input: `Translate the following English sentence to ${targetLanguage}: "${sourceText}"`,
+                    user_input: sourceText,
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,7 +63,7 @@ const TranslationChallenge = ({ apiKey, sourceText, sourceLanguage, targetLangua
                 setScore(score - 1);
             }
         }
-
+        setShowAnswer(true);
         setUserInput('');
     };
 
@@ -59,7 +80,7 @@ const TranslationChallenge = ({ apiKey, sourceText, sourceLanguage, targetLangua
                 <button type="submit">Submit</button>
             </form>
             <p>Score: {score}</p>
-            {correctAnswer && <p>Correct translation: {correctAnswer}</p>}
+            {showAnswer && correctAnswer && <p>Correct translation: {correctAnswer}</p>}
         </div>
     );
 };

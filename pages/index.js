@@ -6,6 +6,13 @@ import AssistantForm from "./AssistantForm";
 
 
 export default function Home() {
+
+  const [showTransForm, setShowTransForm] = useState(false);
+
+  const handleButtonClick = () => {
+    setShowTransForm(!showTransForm);
+  };
+
   const [response, setResponse] = useState("");
 
   async function onFormSubmit(name, targetLanguage, userInput) {
@@ -42,15 +49,27 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1>Welcome to the Personalized Language Learning Assistant!</h1>
-        <AssistantForm onFormSubmit={onFormSubmit} />
-        {response && <p>Assistant: {response}</p>}
-        <TranslationChallenge
-          apiKey={process.env.OPENAI_API_KEY}
-          sourceText="The cat is on the table."
-          sourceLanguage="English"
-          targetLanguage="Spanish"
-        />
+        <div className={styles.mainDiv}>
+          <div className={styles.welcomeMsg}>
+            <h1>Welcome to the Personalized Language Learning Assistant!</h1>
+          </div>
+          <div className={styles.featureDiv}>
+            <div className={styles.assistForm}>
+              <AssistantForm onFormSubmit={onFormSubmit} />
+              {response && <p>Assistant: {response}</p>}
+            </div>
+            <div className={styles.featureBtn}>
+              <button onClick={handleButtonClick}>Translation Challenge</button>
+            </div>
+            <div className={styles.transForm}>
+              <TranslationChallenge
+                apiKey={process.env.OPENAI_API_KEY}
+                sourceLanguage="English"
+                targetLanguage="Spanish"
+              />
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );
