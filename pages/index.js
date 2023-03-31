@@ -4,42 +4,37 @@ import styles from "./index.module.css";
 import TranslationChallenge from "./TranslationChallenge";
 import AssistantForm from "./AssistantForm";
 
-
 export default function Home() {
-
-  const [showTransForm, setShowTransForm] = useState(false);
-
-  const handleButtonClick = () => {
-    setShowTransForm(!showTransForm);
-  };
-
+  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [languageSelected, setLanguageSelected] = useState(false);
   const [response, setResponse] = useState("");
 
-  async function onFormSubmit(name, targetLanguage, userInput) {
-    try {
-      const apiResponse = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, target_language: targetLanguage, user_input: userInput }),
-      });
+  const languages = [
+    { code: "Spanish", label: "Spanish" },
+    { code: "French", label: "French" },
+    // Add more languages as needed
+  ];
 
-      const data = await apiResponse.json();
-      console.log("API response data:", data);
+  const handleLanguageSelection = (e) => {
+    setSelectedLanguage(e.target.value);
+    setLanguageSelected(true);
+  };
 
-      if (apiResponse.status !== 200) {
-        throw data.error || new Error(`Request failed with status ${apiResponse.status}`);
-      }
-
-      setResponse(data.reply);
-    } catch (error) {
-      console.error(error);
-      alert(error.message);
-    }
-  }
-
-
+  const handleFormSubmit = async (targetLanguage, userInput) => {
+    const apiUrl = "/api/generate";
+    const res = await fetch(apiUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        target_language: targetLanguage,
+        user_input: userInput,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const json = await res.json();
+    setResponse(json.reply);
+  };
 
   return (
     <div>
@@ -53,22 +48,34 @@ export default function Home() {
           <div className={styles.welcomeMsg}>
             <h1>Welcome to the Personalized Language Learning Assistant!</h1>
           </div>
-          <div className={styles.featureDiv}>
-            <div className={styles.assistForm}>
-              <AssistantForm onFormSubmit={onFormSubmit} />
-              {response && <p>Assistant: {response}</p>}
+          {!languageSelected && (
+            <div>
+              <h2>Select a language to learn:</h2>
+              <select onChange={handleLanguageSelection}>
+                <option value="">--Choose a language--</option>
+                {languages.map((language) => (
+                  <option key={language.code} value={language.code}>
+                    {language.label}
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className={styles.featureBtn}>
-              <button onClick={handleButtonClick}>Translation Challenge</button>
+          )}
+          {languageSelected && (
+            <div className={styles.featureDiv}>
+              <div className={styles.assistForm}>
+                <AssistantForm onFormSubmit={handleFormSubmit} targetLanguage={selectedLanguage} />
+                {response && <p>Assistant: {response}</p>}
+              </div>
+              <div className={styles.transForm}>
+                <TranslationChallenge
+                  apiKey={process.env.OPENAI_API_KEY}
+                  sourceLanguage="English"
+                  targetLanguage={selectedLanguage}
+                />
+              </div>
             </div>
-            <div className={styles.transForm}>
-              <TranslationChallenge
-                apiKey={process.env.OPENAI_API_KEY}
-                sourceLanguage="English"
-                targetLanguage="Spanish"
-              />
-            </div>
-          </div>
+          )}
         </div>
       </main>
     </div>
