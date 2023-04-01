@@ -12,12 +12,29 @@ export default function Home() {
   const languages = [
     { code: "Spanish", label: "Spanish" },
     { code: "French", label: "French" },
+    { code: "German", label: "German" },
+    { code: "Japanese", label: "Japenese" },
+    { code: "Korean", label: "Korean" },
+    { code: "Russian", label: "Russian" },
+    { code: "Italian", label: "Italian" },
+    { code: "Chinese", label: "Chinese" },
+    { code: "Turkish", label: "Turkish" },
+    { code: "Portuguese", label: "Portuguese" },
+    { code: "Danish", label: "Danish" },
+    { code: "Finnish", label: "Finnish" },
+    { code: "Hindi", label: "Hindi" },
+    { code: "Norwegian", label: "Norwegian" },
+    { code: "Guarani", label: "Guarani" },
     // Add more languages as needed
   ];
 
   const handleLanguageSelection = (e) => {
     setSelectedLanguage(e.target.value);
     setLanguageSelected(true);
+  };
+
+  const handleLanguageChange = (e) => {
+    setSelectedLanguage(e.target.value);
   };
 
   const handleFormSubmit = async (targetLanguage, userInput) => {
@@ -37,7 +54,7 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className={styles.pageBackground}>
       <Head>
         <title>Language Learning Assistant</title>
         <link rel="icon" href="/favicon.ico" />
@@ -46,11 +63,11 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.mainDiv}>
           <div className={styles.welcomeMsg}>
-            <h1>Welcome to the Personalized Language Learning Assistant!</h1>
+            <h1>Welcome to the Language Learning Assistant for English speakers!</h1>
           </div>
           {!languageSelected && (
-            <div>
-              <h2>Select a language to learn:</h2>
+            <div className={styles.welcomeMsg}>
+              <h2>Please Select a language you wish to learn:</h2>
               <select onChange={handleLanguageSelection}>
                 <option value="">--Choose a language--</option>
                 {languages.map((language) => (
@@ -64,6 +81,7 @@ export default function Home() {
           {languageSelected && (
             <div className={styles.featureDiv}>
               <div className={styles.assistForm}>
+                <h2>Language Assistant</h2>
                 <AssistantForm onFormSubmit={handleFormSubmit} targetLanguage={selectedLanguage} />
                 {response && <p>Assistant: {response}</p>}
               </div>
@@ -74,6 +92,19 @@ export default function Home() {
                   targetLanguage={selectedLanguage}
                 />
               </div>
+            </div>
+          )}
+          {languageSelected && (
+            <div className={styles.welcomeMsg}>
+              <h2>Try a different language:</h2>
+              <select value={selectedLanguage} onChange={handleLanguageChange}>
+                <option value="">--Choose a language--</option>
+                {languages.map((language) => (
+                  <option key={language.code} value={language.code}>
+                    {language.label}
+                  </option>
+                ))}
+              </select>
             </div>
           )}
         </div>

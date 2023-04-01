@@ -14,18 +14,38 @@
   font-style: normal;
 }
 
+.html {
+  padding: 0;
+  margin: 0;
+}
+
+.pageBackground {
+  background-color: #212350;
+  min-height: 100vh;
+}
+
+
+.main {
+  background-color: #212350;
+}
+
 .featureDiv {
   display: flex;
   padding-bottom: 50px;
+  justify-content: space-around;
+  width: 80%;
+  flex-wrap: wrap;
 }
 
-.assistForm {
-  padding: 20px 20px 20px 20px;
-
-}
-
+.assistForm,
 .transForm {
-  padding: 20px 20px 20px 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  width: 45%;
+  box-sizing: border-box;
 }
 
 .featureBtn {
@@ -36,6 +56,8 @@
   padding: 20px;
   margin: 20px;
   line-height: 40px;
+  text-align: center;
+  color: white;
 }
 
 .main,
@@ -68,7 +90,7 @@
 .main form {
   display: flex;
   flex-direction: column;
-  width: 320px;
+  width: 100%;
 }
 
 .main input[type="text"] {
@@ -108,7 +130,6 @@
   font-weight: bold;
   margin-top: 40px;
 }
-
 
 main.features {
   display: flex;
