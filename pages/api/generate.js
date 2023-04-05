@@ -37,7 +37,13 @@ export default async function (req, res) {
       handleError(res, error);
     }
   } else if (targetLanguage && userInput) {
-    const prompt = `Translate the following English word or sentence to ${targetLanguage}: "${userInput}"\n\nLanguage Assistant: If the word or sentence is not in English, translate ${userInput} to English. `;
+    const prompt = `Translate the following English word or sentence to ${targetLanguage}: "${userInput}". Ensure that the translation is accurate and makes sense in the context of ${targetLanguage}.
+
+If the word or sentence is not in English, translate "${userInput}" to English.
+
+Original text: "${userInput}"
+Translation: `;
+
 
     try {
       const completion = await openai.createCompletion({
