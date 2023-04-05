@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 const stringSimilarity = require('string-similarity');
 
-const TranslationChallenge = ({ apiKey, sourceLanguage, targetLanguage }) => {
+const TranslationChallenge = ({ sourceLanguage, targetLanguage }) => {
     const [sourceText, setSourceText] = useState('');
     const [userInput, setUserInput] = useState('');
     const [correctAnswer, setCorrectAnswer] = useState(null);

@@ -3,6 +3,8 @@ import { useState } from "react";
 import styles from "./index.module.css";
 import TranslationChallenge from "./TranslationChallenge";
 import AssistantForm from "./AssistantForm";
+import ErrorCorrection from "./ErrorCorrection";
+
 
 export default function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState("");
@@ -94,6 +96,18 @@ export default function Home() {
               </div>
             </div>
           )}
+          {languageSelected && (
+            <div className={styles.featureDiv}>
+              {/* Existing features */}
+              <div className={styles.errorCorrection}>
+                <ErrorCorrection
+                  apiKey={process.env.OPENAI_API_KEY}
+                  targetLanguage={selectedLanguage}
+                />
+              </div>
+            </div>
+          )}
+
           {languageSelected && (
             <div className={styles.welcomeMsg}>
               <h2>Try a different language:</h2>

@@ -18,6 +18,7 @@ export default async function (req, res) {
   const targetLanguage = req.body.target_language;
   const userInput = req.body.user_input;
   const generateSentence = req.body.generate_sentence;
+  const prompt = req.body.prompt;
 
   if (generateSentence) {
     const prompt = "Generate a random English sentence with no more than 10 words:";
@@ -52,10 +53,25 @@ export default async function (req, res) {
     } catch (error) {
       handleError(res, error);
     }
+  } else if (prompt) {
+    try {
+      const completion = await openai.createCompletion({
+        model: "text-davinci-002",
+        prompt,
+        temperature: 0.6,
+        max_tokens: 100,
+        n: 1,
+        stop: null,
+      });
+
+      res.status(200).json({ reply: completion.data.choices[0].text.trim() });
+    } catch (error) {
+      handleError(res, error);
+    }
   } else {
     res.status(400).json({
       error: {
-        message: "Invalid request. Please provide target_language and user_input or set generate_sentence to true.",
+        message: "Invalid request. Please provide target_language and user_input, set generate_sentence to true, or provide a prompt.",
       },
     });
   }
@@ -74,4 +90,3 @@ function handleError(res, error) {
     });
   }
 }
-
