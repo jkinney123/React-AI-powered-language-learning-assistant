@@ -11,7 +11,7 @@ const AssistantForm = ({ onFormSubmit, targetLanguage }) => {
     return (
         <form onSubmit={onSubmit}>
             <label>
-                Ask a question or request a translation:
+                Enter a word or sentence for translation:
                 <input
                     type="text"
                     value={userInput}

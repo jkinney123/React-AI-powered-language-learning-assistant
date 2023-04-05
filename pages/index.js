@@ -65,11 +65,12 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.mainDiv}>
           <div className={styles.welcomeMsg}>
-            <h1>Welcome to the Language Learning Assistant for English speakers!</h1>
+            <h1>Welcome to my AI-powered Language Learning Assistant!</h1>
+            <p>Please Note* Chat GPT is not perfect, so some responses may produce inaccurate information. This should not be considered a primary source to learn a language, but rather a quick learning tool for practice </p>
           </div>
           {!languageSelected && (
             <div className={styles.welcomeMsg}>
-              <h2>Please Select a language you wish to learn:</h2>
+              <h2>Please Select a language you wish to practice learning:</h2>
               <select onChange={handleLanguageSelection}>
                 <option value="">--Choose a language--</option>
                 {languages.map((language) => (
