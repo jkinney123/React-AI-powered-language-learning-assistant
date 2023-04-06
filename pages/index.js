@@ -6,6 +6,8 @@ import AssistantForm from "./AssistantForm";
 import ErrorCorrection from "./ErrorCorrection";
 
 
+
+
 export default function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [languageSelected, setLanguageSelected] = useState(false);
@@ -68,6 +70,19 @@ export default function Home() {
             <h1>Welcome to my AI-powered Language Learning Assistant!</h1>
             <p>Please Note* Chat GPT is not perfect, so some responses may produce inaccurate information. This should not be considered a primary source to learn a language, but rather a quick learning tool for practice </p>
           </div>
+          {languageSelected && (
+            <div className={styles.langSelect}>
+              <h2>Try a different language:</h2>
+              <select value={selectedLanguage} onChange={handleLanguageChange}>
+                <option value="">--Choose a language--</option>
+                {languages.map((language) => (
+                  <option key={language.code} value={language.code}>
+                    {language.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           {!languageSelected && (
             <div className={styles.welcomeMsg}>
               <h2>Please Select a language you wish to practice learning:</h2>
@@ -97,6 +112,7 @@ export default function Home() {
               </div>
             </div>
           )}
+
           {languageSelected && (
             <div className={styles.featureDiv}>
               {/* Existing features */}
@@ -106,22 +122,11 @@ export default function Home() {
                   targetLanguage={selectedLanguage}
                 />
               </div>
+
             </div>
           )}
 
-          {languageSelected && (
-            <div className={styles.welcomeMsg}>
-              <h2>Try a different language:</h2>
-              <select value={selectedLanguage} onChange={handleLanguageChange}>
-                <option value="">--Choose a language--</option>
-                {languages.map((language) => (
-                  <option key={language.code} value={language.code}>
-                    {language.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+
         </div>
       </main>
     </div>

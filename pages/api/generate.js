@@ -19,6 +19,8 @@ export default async function (req, res) {
   const userInput = req.body.user_input;
   const generateSentence = req.body.generate_sentence;
   const prompt = req.body.prompt;
+  const temperature = req.body.temperature;
+  const max_tokens = req.body.max_tokens;
 
   if (generateSentence) {
     const prompt = "Generate a random English sentence with no more than 10 words:";
@@ -26,7 +28,7 @@ export default async function (req, res) {
       const completion = await openai.createCompletion({
         model: "text-davinci-002",
         prompt,
-        temperature: 0.7,
+        temperature: 0.6,
         max_tokens: 30,
         n: 1,
         stop: null,
@@ -37,19 +39,13 @@ export default async function (req, res) {
       handleError(res, error);
     }
   } else if (targetLanguage && userInput) {
-    const prompt = `Translate the following English word or sentence to ${targetLanguage}: "${userInput}". Ensure that the translation is accurate and makes sense in the context of ${targetLanguage}.
-
-If the word or sentence is not in English, translate "${userInput}" to English.
-
-Original text: "${userInput}"
-Translation: `;
-
+    const prompt = `Translate the following English text to ${targetLanguage}: "${userInput}".\n\nTranslation: `;
 
     try {
       const completion = await openai.createCompletion({
         model: "text-davinci-002",
         prompt,
-        temperature: 0.5,
+        temperature: 0.6,
         max_tokens: 200,
         n: 1,
         stop: null,

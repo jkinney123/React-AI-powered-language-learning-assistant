@@ -52,7 +52,7 @@ const ErrorCorrection = ({ targetLanguage }) => {
                 "1. Correct sentence: Wir gehen ins Kino.\n2. Sentence with error: Wir gehen im Kino.",
                 "1. Correct sentence: Das Wetter ist schön.\n2. Sentence with error: Das Wetter ist schönem.",
             ],
-            Japenese: [
+            Japanese: [
                 "1. Correct sentence: これはペンです。\n2. Sentence with error: これペンです。",
                 "1. Correct sentence: 私はりんごを食べます。\n2. Sentence with error: 私はりんご食べます。",
                 "1. Correct sentence: 明日雨が降ります。\n2. Sentence with error: 明日雨降ります。",
@@ -152,19 +152,28 @@ const ErrorCorrection = ({ targetLanguage }) => {
 
 
 
+        const normalizeSentence = (sentence) => {
+            return sentence.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+        };
         const response = await callApi(prompt);
         const lines = response.split("\n");
         const correctSentenceLine = lines.find((line) => line.startsWith("1."));
         const sentenceWithErrorLine = lines.find((line) => line.startsWith("2."));
 
-        if (correctSentenceLine && sentenceWithErrorLine && correctSentenceLine !== sentenceWithErrorLine) {
-            setGeneratedSentenceWithError(sentenceWithErrorLine.replace("2. Sentence with error:", "").trim().replace(/^2\./, "").trim());
-            setGeneratedCorrectSentence(correctSentenceLine.replace("1. Correct sentence:", "").trim().replace(/^1\./, "").trim());
-        } else {
-            console.error("Unexpected response format:", response);
-            // Generate a new sentence if the response is not as expected
-            generateSentence();
+        if (correctSentenceLine && sentenceWithErrorLine) {
+            const corrected = correctSentenceLine.replace("1. Correct sentence:", "").trim().replace(/^1\./, "").trim();
+            const withError = sentenceWithErrorLine.replace("2. Sentence with error:", "").trim().replace(/^2\./, "").trim();
+
+            if (normalizeSentence(corrected) !== normalizeSentence(withError)) {
+                setGeneratedSentenceWithError(withError);
+                setGeneratedCorrectSentence(corrected);
+            } else {
+                console.error("Unexpected response format:", response);
+                // Generate a new sentence if the response is not as expected
+                generateSentence();
+            }
         }
+
     };
 
 
@@ -179,6 +188,7 @@ const ErrorCorrection = ({ targetLanguage }) => {
         } else {
             setFeedback("There is still an error in your correction.");
         }
+
     };
 
 
