@@ -4,6 +4,8 @@ import styles from "./index.module.css";
 import TranslationChallenge from "./TranslationChallenge";
 import AssistantForm from "./AssistantForm";
 import ErrorCorrection from "./ErrorCorrection";
+import IdiomaticExpressions from "./IdiomaticExpressions";
+
 
 
 
@@ -109,6 +111,9 @@ export default function Home() {
                   sourceLanguage="English"
                   targetLanguage={selectedLanguage}
                 />
+              </div>
+              <div className={styles.transForm}>
+                <IdiomaticExpressions targetLanguage={selectedLanguage} />
               </div>
             </div>
           )}

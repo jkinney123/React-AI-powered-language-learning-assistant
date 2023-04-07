@@ -69,7 +69,7 @@ const TranslationChallenge = ({ sourceLanguage, targetLanguage }) => {
         if (userInput && correctAnswer) {
             const similarity = compareTranslations(userInput, correctAnswer);
             console.log("Similarity:", similarity);
-            const similarityThreshold = 0.8; // Adjust this value to set the required similarity
+            const similarityThreshold = 0.75; // Adjust this value to set the required similarity
 
             if (similarity >= similarityThreshold) {
                 setScore(score + 1);
