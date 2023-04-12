@@ -18,17 +18,10 @@ Ai powered language learning assistant.
    $ npm install
    ```
 
-5. Make a copy of the example environment variables file
+5. Rename the example environment variables file ".env.example" to ".env" 
 
-   On Linux systems: 
-   ```bash
-   $ cp .env.example .env
-   ```
-   On Windows:
-   ```powershell
-   $ copy .env.example .env
-   ```
-6. Add your [API key](https://platform.openai.com/account/api-keys) to the newly created `.env` file
+   
+6. Add your [API key](https://platform.openai.com/account/api-keys) to the new `.env` file
 
 7. Run the app
 
