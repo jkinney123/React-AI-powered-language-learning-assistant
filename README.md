@@ -1,4 +1,4 @@
-Ai powered language learning assistant. 
+Ai powered language learning assistant powered by GPT.
 
 ## Setup
 
