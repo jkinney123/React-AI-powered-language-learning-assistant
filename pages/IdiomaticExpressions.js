@@ -4,6 +4,7 @@ const IdiomaticExpressions = ({ targetLanguage }) => {
     const [expression, setExpression] = useState("");
     const [meaning, setMeaning] = useState("");
     const [example, setExample] = useState("");
+    const [translatedExample, setTranslatedExample] = useState("");
     const [usedExpressions, setUsedExpressions] = useState(new Set());
 
     const normalizeText = (text) => {
@@ -34,7 +35,7 @@ const IdiomaticExpressions = ({ targetLanguage }) => {
         let selectedExpression;
 
         while (!unique) {
-            const prompt = `Generate an idiomatic expression or proverb in ${targetLanguage} along with its detailed meaning and an example of how it's used. Use the following format:\n\nExpression: <expression>\nMeaning: <meaning>\nExample: <example>\n`;
+            const prompt = `Generate an idiomatic expression or proverb in ${targetLanguage} along with its detailed meaning and an example of how it's used. Use the following format:\n\nExpression: <expression>\nMeaning: <meaning>\nExample: <example>\n\nTranslate the example back to English:\n\nExample Translated: <example_translated>`;
             const apiUrl = "/api/generate";
             const res = await fetch(apiUrl, {
                 method: "POST",
@@ -58,12 +59,13 @@ const IdiomaticExpressions = ({ targetLanguage }) => {
             });
 
             if (
-                responseText.length === 3 &&
+                responseText.length === 4 &&
                 !usedExpressions.has(normalizedMeaning) &&
                 !tooSimilar &&
                 responseText[0].startsWith("Expression:") &&
                 responseText[1].startsWith("Meaning:") &&
-                responseText[2].startsWith("Example:")
+                responseText[2].startsWith("Example:") &&
+                responseText[3].startsWith("Example Translated:")
             ) {
                 unique = true;
                 selectedExpression = responseText;
@@ -78,6 +80,7 @@ const IdiomaticExpressions = ({ targetLanguage }) => {
         setExpression(selectedExpression[0].replace("Expression: ", ""));
         setMeaning(selectedExpression[1].replace("Meaning: ", ""));
         setExample(selectedExpression[2].replace("Example: ", ""));
+        setTranslatedExample(selectedExpression[3].replace("Example Translated: ", ""));
     };
 
 
@@ -90,6 +93,7 @@ const IdiomaticExpressions = ({ targetLanguage }) => {
                 <p><strong>Expression:</strong> {expression}</p>
                 <p><strong>Meaning:</strong> {meaning}</p>
                 <p><strong>Example:</strong> {example}</p>
+                <p><strong>Example Translated:</strong> {translatedExample}</p>
             </div>
         </div>
     );

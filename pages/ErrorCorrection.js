@@ -6,6 +6,7 @@ const ErrorCorrection = ({ targetLanguage }) => {
     const [generatedCorrectSentence, setGeneratedCorrectSentence] = useState("");
     const [userInput, setUserInput] = useState("");
     const [feedback, setFeedback] = useState("");
+    const [translatedCorrectSentence, setTranslatedCorrectSentence] = useState("");
     const [showAnswer, setShowAnswer] = useState(false);
 
     const callApi = async (prompt) => {
@@ -22,6 +23,17 @@ const ErrorCorrection = ({ targetLanguage }) => {
         } catch (error) {
             console.error(`Error with API request: ${error.message}`);
             return null;
+        }
+    };
+
+    const translateSentence = async (sentence) => {
+        const prompt = `Translate the following sentence from ${targetLanguage} to English: "${sentence}"`;
+
+        try {
+            const translated = await callApi(prompt);
+            setTranslatedCorrectSentence(translated);
+        } catch (error) {
+            console.error(`Error translating sentence: ${error.message}`);
         }
     };
 
@@ -43,7 +55,7 @@ const ErrorCorrection = ({ targetLanguage }) => {
                 "1. Correct sentence: Nous avons deux chiens.\n2. Sentence with error: Nous avons deux chien.",
                 "1. Correct sentence: Elle travaille à l'école.\n2. Sentence with error: Elle travaille à l'ecole.",
 
-                // Add French examples here.
+
             ],
             German: [
                 "1. Correct sentence: Wo ist das Badezimmer?\n2. Sentence with error: Wo ist das Badezimmers?",
@@ -167,6 +179,7 @@ const ErrorCorrection = ({ targetLanguage }) => {
             if (normalizeSentence(corrected) !== normalizeSentence(withError)) {
                 setGeneratedSentenceWithError(withError);
                 setGeneratedCorrectSentence(corrected);
+                translateSentence(corrected);
             } else {
                 console.error("Unexpected response format:", response);
                 // Generate a new sentence if the response is not as expected
@@ -175,6 +188,8 @@ const ErrorCorrection = ({ targetLanguage }) => {
         }
 
     };
+
+
 
 
 
@@ -222,7 +237,10 @@ const ErrorCorrection = ({ targetLanguage }) => {
             </form>
             <button className={styles.featureBtn} onClick={displayAnswer}>See the answer</button>
             {showAnswer && generatedCorrectSentence && (
-                <p>Corrected sentence: {generatedCorrectSentence}</p>
+                <>
+                    <p>Corrected sentence: {generatedCorrectSentence}</p>
+                    <p>Corrected sentence translated: {translatedCorrectSentence}</p>
+                </>
             )}
             {feedback && <p>Feedback: {feedback}</p>}
         </div>
